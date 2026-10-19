@@ -1,0 +1,11 @@
+* text=auto
+*.md     text eol=lf
+*.h      text eol=lf
+*.c      text eol=lf
+*.patch  text eol=lf
+*.txt    text eol=lf
+*.pdf    binary
+*.uf2    binary
+*.shapr  binary
+*.stl    binary
+*.zip    binary

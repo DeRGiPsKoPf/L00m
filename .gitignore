@@ -1,0 +1,19 @@
+# Entpackter STEP-Export (171 MB, über dem GitHub-Limit) – versioniert wird CAD/*.step.zip
+*.step
+*.stp
+
+# Firmware-Build
+build/
+
+# Python (Muster-Generator)
+__pycache__/
+*.pyc
+.venv/
+
+# Lokale Claude-Code-Einstellungen
+.claude/settings.local.json
+
+# Betriebssystem
+Thumbs.db
+desktop.ini
+.DS_Store
