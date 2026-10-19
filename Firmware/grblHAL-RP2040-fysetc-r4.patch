@@ -238,14 +238,15 @@ index c45173b..8714308 100644
    #include "boards/citoh_cx6000_map.h"
  #elif defined(BOARD_MY_MACHINE)
 diff --git a/grbl/settings.c b/grbl/settings.c
-index b442d51..41a48c8 100644
+index b442d51..dee3214 100644
 --- a/grbl/settings.c
 +++ b/grbl/settings.c
-@@ -40,6 +40,28 @@
- #endif
+@@ -41,6 +41,29 @@
  #if ENABLE_SPINDLE_LINEARIZATION
  #include <stdio.h>
+ #endif
 +
++// Per axis homing feed rates, may be overridden by machine_defaults.h
 +#ifndef DEFAULT_HOMING_PER_AXIS_FEEDRATES
 +#define DEFAULT_HOMING_PER_AXIS_FEEDRATES Off
 +#endif
@@ -267,10 +268,10 @@ index b442d51..41a48c8 100644
 +#ifndef DEFAULT_Z_HOMING_SEEK_RATE
 +#define DEFAULT_Z_HOMING_SEEK_RATE DEFAULT_HOMING_SEEK_RATE
 +#endif
- #endif
  #if SPINDLE_SYNC_ENABLE
  extern void st_spindle_sync_cfg (settings_t *settings, settings_changed_flags_t changed);
-@@ -143,6 +165,7 @@ PROGMEM static const settings_t defaults = {
+ #endif
+@@ -143,6 +166,7 @@ PROGMEM static const settings_t defaults = {
      .homing.flags.keep_on_reset = DEFAULT_HOMING_KEEP_STATUS_ON_RESET,
      .homing.flags.use_limit_switches = DEFAULT_HOMING_USE_LIMIT_SWITCHES,
      .homing.flags.nx_scrips_on_homed_only = DEFAULT_RUN_STARTUP_SCRIPTS_ONLY_ON_HOMED,
@@ -278,7 +279,7 @@ index b442d51..41a48c8 100644
  #else
      .homing.flags.value = 0,
  #endif
-@@ -253,8 +276,8 @@ PROGMEM static const settings_t defaults = {
+@@ -253,8 +277,8 @@ PROGMEM static const settings_t defaults = {
      .axis[X_AXIS].jerk = (DEFAULT_X_JERK * 60.0f * 60.0f * 60.0f),
      .axis[X_AXIS].max_travel = (-DEFAULT_X_MAX_TRAVEL),
      .axis[X_AXIS].dual_axis_offset = 0.0f,
@@ -289,7 +290,7 @@ index b442d51..41a48c8 100644
  #if ENABLE_BACKLASH_COMPENSATION
      .axis[X_AXIS].backlash = 0.0f,
  #endif
-@@ -265,8 +288,8 @@ PROGMEM static const settings_t defaults = {
+@@ -265,8 +289,8 @@ PROGMEM static const settings_t defaults = {
      .axis[Y_AXIS].acceleration = (DEFAULT_Y_ACCELERATION * 60.0f * 60.0f),
      .axis[Y_AXIS].jerk = (DEFAULT_Y_JERK * 60.0f * 60.0f * 60.0f),
      .axis[Y_AXIS].dual_axis_offset = 0.0f,
@@ -300,7 +301,7 @@ index b442d51..41a48c8 100644
  #if ENABLE_BACKLASH_COMPENSATION
      .axis[Y_AXIS].backlash = 0.0f,
  #endif
-@@ -277,8 +300,8 @@ PROGMEM static const settings_t defaults = {
+@@ -277,8 +301,8 @@ PROGMEM static const settings_t defaults = {
      .axis[Z_AXIS].jerk = (DEFAULT_Z_JERK * 60.0f * 60.0f * 60.0f),
      .axis[Z_AXIS].max_travel = (-DEFAULT_Z_MAX_TRAVEL),
      .axis[Z_AXIS].dual_axis_offset = 0.0f,

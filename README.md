@@ -1,5 +1,7 @@
 # L00m – computergesteuerter Jacquard-Webstuhl
 
+![L00m: CAD-Modell mit Dual-Z-Hub, X-Schlitten mit Servo und Harnisch](Bilder/L00m-Render.png)
+
 L00m ist ein Jacquard-Webstuhl im Eigenbau für den Schul- und Kunstbetrieb. Statt der klassischen
 Platinen-Mechanik wählt ein kleiner Aktor (RC-Servo) die Kettfäden einzeln aus, ein zentraler Hub (zwei
 Schrittmotoren an Trapezgewindespindeln) hebt alle gewählten Fäden gemeinsam an. Gesteuert wird das Ganze wie ein
@@ -14,7 +16,7 @@ Ziel ist eine langlebige, wartungsarme und sichere Maschine (5–10 Jahre Einsat
 |---|---|
 | Konzept & Recherche | fertig, siehe `01 Konzept & Quellen` und `02 L00m Entwicklungsgenese` |
 | CAD (Shapr3D) | in Arbeit, Stand 19.10.2026 |
-| Elektronik & Firmware | aufgebaut und getestet: grblHAL auf FYSETC R4, X + Dual-Z mit Squaring, Servo per `M280` |
+| Elektronik & Firmware | aufgebaut und getestet: grblHAL auf FYSETC R4, X + Dual-Z (TR8x8) mit Squaring, Servo per `M280` |
 | Mechanik-Aufbauanleitung | fehlt noch |
 | Muster-Generator (Bild → G-Code) | geplant, noch nicht begonnen |
 | Sicherheitskonzept (Strombegrenzung, Not-Aus) | geplant, noch nicht umgesetzt |
@@ -24,9 +26,10 @@ Ziel ist eine langlebige, wartungsarme und sichere Maschine (5–10 Jahre Einsat
 ```
 01 Konzept & Quellen - Jacquard-Webstuhl.pdf   Aktor-Varianten, Skalierung, Maker-Projekte als Quellen
 02 L00m Entwicklungsgenese.pdf                 Mechanik-, Antriebs-, Strom- und Sicherheitsentscheidungen
+Bilder/                                        Renderings
 CAD/
   Project L00m - 20261019.shapr                Shapr3D-Projekt (Arbeitsdatei)
-  L03m.step.zip                                STEP-Export der Baugruppe (gezippt, entpackt 171 MB)
+  L03m.step.zip                                STEP-Export der Baugruppe, Projektversion 3 (gezippt, entpackt 171 MB)
 Firmware/
   grblHAL auf FYSETC-R4 - Flashen & Konfiguration.pdf   Anleitung: Flashen, Verkabeln, Einstellungen, Fehlersuche
   grblHAL-FYSETC-R4.uf2                        fertige Firmware zum Draufkopieren

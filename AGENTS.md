@@ -14,10 +14,10 @@ gemeinsam. Gesteuert wird per G-Code über grblHAL; ein geplanter Python-Muster-
 - **Controller:** FYSETC R4 V1.0 (RP2040, 4× TMC2209 fest verlötet, UART-Modus, 0,22-Ω-Messwiderstände)
 - **Firmware:** grblHAL, Treiber [grblHAL/RP2040](https://github.com/grblHAL/RP2040) Commit `2f5bc4a` + eigener Patch.
   Gebaut mit Pico SDK 2.1.1, arm-none-eabi-gcc 13.2, CMake + Ninja (Linux/WSL)
-- **Mechanik:** 2020-Aluprofil (Nut 6, Blind Joints), MGN9H-Linearführungen, Dual-Z-Trapezgewindespindeln mit
-  2× NEMA 17 (17HE15-1504S oder 17HS4401), X über GT2-Riemen (20 Zähne)
+- **Mechanik:** 2020-Aluprofil (Nut 6, Blind Joints), MGN9H-Linearführungen, Dual-Z-Trapezgewindespindeln TR8x8
+  (8 mm Steigung, `$102=400`) mit 2× NEMA 17 (17HE15-1504S oder 17HS4401), X über GT2-Riemen (20 Zähne)
 - **Aktor für die Fadenauswahl:** RC-Servo (getestet MG90, geplant bis 6× SG90) per `M280 P0 S<Winkel>`
-- **CAD:** Shapr3D (`.shapr`), Export als STEP und STL
+- **CAD:** Shapr3D (`.shapr`), Export als STEP
 - **G-Code-Sender:** ioSender (Windows), alternativ gSender, CNCjs, UGS
 - **Muster-Generator (geplant):** Python + Pillow
 
@@ -26,6 +26,7 @@ gemeinsam. Gesteuert wird per G-Code über grblHAL; ein geplanter Python-Muster-
 ```
 01 Konzept & Quellen - Jacquard-Webstuhl.pdf   Recherche: Aktor-Varianten, Skalierung, Quellen
 02 L00m Entwicklungsgenese.pdf                 Designentscheidungen Mechanik, Antrieb, Strom, Sicherheit
+Bilder/                                        Renderings (im README eingebunden)
 CAD/                                           Shapr3D-Projekt, STEP-Export (gezippt)
 Firmware/                                      Anleitung (PDF), fertige .uf2, Patch, machine_defaults.h
 LICENSES/                                      Lizenzvolltexte (siehe LICENSE.md)
@@ -44,7 +45,8 @@ Endstops X-STOP, Z-STOP, E-STOP (= Z2). Servo am Laser-Stecker (GPIO22). Vollst�
 
 - **Sprache:** Dokumentation und Commit-Nachrichten auf Deutsch. Code-Kommentare in der Firmware auf Englisch
   (wie grblHAL upstream).
-- **Dateinamen:** Dokumente mit laufender Nummer (`01 …`, `02 …`); CAD-Stände mit Datum `JJJJMMTT`.
+- **Dateinamen:** Dokumente mit laufender Nummer (`01 …`, `02 …`); Shapr3D-Stände mit Datum `JJJJMMTT`; der
+  STEP-Export trägt die Projektversion im Namen (`L03m` = Version 3, so gewollt).
 - **Firmware-Änderungen** nur über den Patch: grblHAL/RP2040 auf `2f5bc4a` auschecken, Patch anwenden, ändern, neuen
   Patch mit `git diff` erzeugen. `machine_defaults.h` liegt zusätzlich einzeln in `Firmware/` und muss mit der
   Fassung im Patch übereinstimmen.
@@ -84,7 +86,8 @@ Am Gerät: `$I` (Board/Optionen), `$+` (alle Einstellungen; `$$` geht in diesem 
 - **grblHAL statt Klipper:** keine Makrosprache, daher erzeugt der Muster-Generator alle Servo-Befehle direkt als
   G-Code.
 - **Motorstrom:** maximal 958 mA (0,22-Ω-Messwiderstände); grblHAL rechnet sonst mit 0,11 Ω, daher
-  `TRINAMIC_R_SENSE 220` im Patch. Z2 übernimmt Strom und Mikroschritte von Z.
+  `TRINAMIC_R_SENSE 220` im Patch. Z2 übernimmt Strom und Mikroschritte von Z. Der passende Wert hängt von
+  Fadenzahl und Fadenspannung ab und wird an jedem Aufbau selbst ausgetestet; eingebaut sind 500 mA.
 - **Sicherheit:** 12 V statt 24 V senkt die Kraft nicht (TMC2209 regelt Strom). StallGuard schützt keine Hände.
   Geplant: Strom so tief, dass 110 N gerade gehoben werden, plus Pilz-Not-Aus, der die 24 V hart trennt.
 - **Servo-Strom:** Mehrere Servos am 5-V-Wandler des R4 können einen Brownout auslösen. Für mehr als 1–2 Servos
@@ -94,6 +97,16 @@ Am Gerät: `$I` (Board/Optionen), `$+` (alle Einstellungen; `$$` geht in diesem 
 - **STEP wird gezippt versioniert** statt Git LFS (Entscheidung 19.10.2026): kein LFS auf den Rechnern nötig; jede
   neue Version vergrößert aber die Historie um ~45 MB.
 - **Hard-Limits aus (`$21=0`):** der unbelegte Y-Eingang meldet „ausgelöst“ und würde sofort Alarm geben.
+- **Ersatzwerte in `grbl/settings.c`** (Homing-Geschwindigkeit pro Achse) stehen im Patch außerhalb jedes `#if`.
+  Innerhalb von `#if ENABLE_SPINDLE_LINEARIZATION` (so bis 19.10.2026) brach der Build ohne `machine_defaults.h` ab.
+- **Firmware unter Windows bauen** geht (getestet 19.10.2026): Arm GNU Toolchain 13.2.rel1 (mingw), CMake, Ninja und
+  vorgebautes `pioasm`/`picotool` aus [raspberrypi/pico-sdk-tools](https://github.com/raspberrypi/pico-sdk-tools)
+  2.1.1 (`-Dpioasm_DIR`, `-Dpicotool_DIR`). Kurzen Build-Pfad nehmen (gcc scheitert an Windows' 260-Zeichen-Grenze),
+  Submodule mit `git -c core.longpaths=true` holen; vom Pico SDK reicht `lib/tinyusb`. Ergebnis funktionsgleich,
+  aber nicht bytegleich zum Ubuntu-Build (andere C-Bibliothek im Compiler-Paket).
+- **PDFs und Claude-Docs:** Firmware-Anleitung und Konzept gibt es auch als Claude-Docs, deren PDF-Export aber anders
+  aussieht (andere Seitenaufteilung). Kleine Korrekturen am 19.10.2026 wurden deshalb direkt in die PDFs geschrieben
+  (PyMuPDF, gleiche Schriften und Positionen); die Entwicklungsgenese hat keine Doc-Quelle.
 
 ## Nicht anfassen / Vorsicht bei
 
@@ -102,4 +115,3 @@ Am Gerät: `$I` (Board/Optionen), `$+` (alle Einstellungen; `$$` geht in diesem 
 - **DIAG-Jumper am R4** müssen gezogen bleiben, sonst melden die Treiber falsche Endstops.
 - **FAN2 nicht belegen:** GPIO22 ist auch das Servo-Signal.
 - **Motoren nie unter Spannung an- oder abstecken** (zerstört die fest verlöteten Treiber).
-- **Pinout-Grafik von FYSETC** im Firmware-PDF ist Fremdmaterial ohne Lizenz (siehe `LICENSE.md`).
