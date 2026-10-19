@@ -7,7 +7,9 @@ Arbeitsstand steht in `HANDOFF.md`, nicht hier.
 
 L00m ist ein computergesteuerter Jacquard-Webstuhl im Eigenbau für den Schul- und Kunstbetrieb (5–10 Jahre
 Einsatz). Ein Servo auf einem X-Schlitten wählt Kettfäden einzeln aus, ein Dual-Z-Hub hebt alle gewählten Fäden
-gemeinsam. Gesteuert wird per G-Code über grblHAL; ein geplanter Python-Muster-Generator übersetzt Bilder in G-Code.
+gemeinsam. Gesteuert wird per G-Code über grblHAL; der geplante Muster-Generator
+[L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) (eigenes Repo, Offline-Web-App) übersetzt Bilder,
+Zeichnungen, PDFs, Webpatronen und Code in G-Code.
 
 ## Tech-Stack
 
@@ -19,7 +21,8 @@ gemeinsam. Gesteuert wird per G-Code über grblHAL; ein geplanter Python-Muster-
 - **Aktor für die Fadenauswahl:** RC-Servo (getestet MG90, geplant bis 6× SG90) per `M280 P0 S<Winkel>`
 - **CAD:** Shapr3D (`.shapr`), Export als STEP
 - **G-Code-Sender:** ioSender (Windows), alternativ gSender, CNCjs, UGS
-- **Muster-Generator (geplant):** Python + Pillow
+- **Muster-Generator (geplant):** eigenes Repo [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern),
+  TypeScript, Offline-Web-App als eine einzige HTML-Datei, Senden per Web Serial
 
 ## Architektur
 
@@ -32,9 +35,12 @@ Firmware/                                      Anleitung (PDF), fertige .uf2, Pa
 LICENSES/                                      Lizenzvolltexte (siehe LICENSE.md)
 ```
 
-Zusammenspiel: Muster (Bild/Matrix) → Muster-Generator → `.gcode` → G-Code-Sender (USB) → grblHAL auf dem R4.
+Zusammenspiel: Muster (Bild, Zeichnung, PDF, WIF, Code) → L00m-Pattern mit Maschinenprofil → `.gcode` →
+G-Code-Sender oder direkt per Web Serial (USB) → grblHAL auf dem R4.
 Pro Schuss: Z auf Wählhöhe, X fährt Faden für Faden an, Servo wählt (`M280 P0 S90`, `G4 P0.2`, `M280 P0 S0`),
-dann hebt Z alle gewählten Fäden (`G1 Z90`), danach Z0 schließt das Fach. Ablauf: Entwicklungsgenese Kapitel 7.
+dann hebt Z alle gewählten Fäden (`G1 Z90`), `M0` pausiert zum Schusseintrag, nach Zyklusstart schließt Z0 das Fach.
+Ablauf: Entwicklungsgenese Kapitel 7; Profile und G-Code-Vorlagen liegen in L00m-Pattern und nennen den
+Firmware-Stand, für den sie getestet sind. Firmware-Änderungen hier deshalb dort mitprüfen.
 
 **Pinbelegung (grblHAL):** X = MOTOR-X, Z1 = MOTOR-Z, Z2 = MOTOR-E (ganged + auto-squared), Y-Treiber frei.
 Endstops X-STOP, Z-STOP, E-STOP (= Z2). Servo am Laser-Stecker (GPIO22). Vollständig: Firmware-PDF Kapitel 10.
@@ -85,6 +91,9 @@ Am Gerät: `$I` (Board/Optionen), `$+` (alle Einstellungen; `$$` geht in diesem 
   Fett + Faserflug verklebt.
 - **grblHAL statt Klipper:** keine Makrosprache, daher erzeugt der Muster-Generator alle Servo-Befehle direkt als
   G-Code.
+- **Muster-Generator als eigenes Repo in TypeScript** (Entscheidung 19.10.2026): statt Python + Pillow in diesem
+  Repo. Als Offline-Web-App in einer HTML-Datei läuft er ohne Installation auf jedem Gerät; ein eigenes Repo hält die
+  CAD-Historie fern und erlaubt eigene Releases. Begründung: `KONZEPT.md` und `AGENTS.md` in L00m-Pattern.
 - **Motorstrom:** maximal 958 mA (0,22-Ω-Messwiderstände); grblHAL rechnet sonst mit 0,11 Ω, daher
   `TRINAMIC_R_SENSE 220` im Patch. Z2 übernimmt Strom und Mikroschritte von Z. Der passende Wert hängt von
   Fadenzahl und Fadenspannung ab und wird an jedem Aufbau selbst ausgetestet; eingebaut sind 500 mA.

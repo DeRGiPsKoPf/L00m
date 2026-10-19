@@ -5,11 +5,6 @@
 # Firmware-Build
 build/
 
-# Python (Muster-Generator)
-__pycache__/
-*.pyc
-.venv/
-
 # Lokale Claude-Code-Einstellungen
 .claude/settings.local.json
 

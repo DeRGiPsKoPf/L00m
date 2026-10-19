@@ -8,7 +8,7 @@ passenden freien Lizenz. Alle drei sind Copyleft-Lizenzen: Wer etwas davon verä
 
 | Dateien | Lizenz | Volltext |
 |---|---|---|
-| `Firmware/grblHAL-RP2040-fysetc-r4.patch`, `Firmware/machine_defaults.h`, `Firmware/grblHAL-FYSETC-R4.uf2`, künftiger Code (z. B. Muster-Generator) | GNU General Public License v3.0 oder später (`GPL-3.0-or-later`) | [LICENSES/GPL-3.0-or-later.txt](LICENSES/GPL-3.0-or-later.txt) |
+| `Firmware/grblHAL-RP2040-fysetc-r4.patch`, `Firmware/machine_defaults.h`, `Firmware/grblHAL-FYSETC-R4.uf2`, künftiger Code (der Muster-Generator liegt im eigenen Repo L00m-Pattern) | GNU General Public License v3.0 oder später (`GPL-3.0-or-later`) | [LICENSES/GPL-3.0-or-later.txt](LICENSES/GPL-3.0-or-later.txt) |
 | `CAD/` (Shapr3D, STEP, STL) | CERN Open Hardware Licence Version 2 – Strongly Reciprocal (`CERN-OHL-S-2.0`) | [LICENSES/CERN-OHL-S-2.0.txt](LICENSES/CERN-OHL-S-2.0.txt) |
 | Dokumentation: PDFs, Bilder in `Bilder/`, `README.md`, `AGENTS.md`, `CLAUDE.md`, `HANDOFF.md`, `LICENSE.md` | Creative Commons Namensnennung – Weitergabe unter gleichen Bedingungen 4.0 International (`CC-BY-SA-4.0`) | [LICENSES/CC-BY-SA-4.0.txt](LICENSES/CC-BY-SA-4.0.txt) |
 
