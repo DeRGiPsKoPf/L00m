@@ -8,6 +8,7 @@ Prototyp mit X + Dual-Z + einem Servo mechanisch fertig aufbauen und die erste F
 
 ## Letzter Stand
 
+- 21.10.2026: Erster Servo-Test mit L00m-Pattern am Gerät: `M280` läuft der X-Fahrt voraus (offener Punkt 8).
 - 21.10.2026: Controller-Alternativen für X + Z1/Z2 mit Squaring, 1–6 Servos, WLAN, Neopixel, OLED und 1–2 Tastern
   recherchiert (nur Datenblätter, Schaltpläne und Quellcode, nichts am Gerät getestet). Wahrscheinlichster Weg:
   erst R4 per USB (A), dann ESP32-S3 als grblHAL-Host (C); Details unter „Controller-Recherche“.
@@ -40,6 +41,12 @@ Prototyp mit X + Dual-Z + einem Servo mechanisch fertig aufbauen und die erste F
    um die `M0`-Pause und den Weiter-Taster ergänzen.
 7. Nach dem Probelauf: ESP32-S3-Host als Prototyp am R4 (Option C unten). Erst klären, welche grblHAL-Schnittstelle
    der S3 nutzt (zweiter UART am R4 oder USB-Host) – davon hängt ab, ob GPIO0/1 für Servos frei bleiben.
+8. **`M280` wartet nicht auf laufende Fahrten** (am Gerät in Zeitlupe gesehen, 21.10.2026; in den grblHAL-Quellen
+   bestätigt): Das PWM-Servo-Plugin (`Plugins_misc/pwm_servo_m280.c`) setzt kein `user_mcode_sync`, der Servo
+   schaltet also beim Einlesen, während X noch fährt. `G4` wartet auf den leeren Puffer (Bruchteile gehen,
+   50-ms-Schritte). L00m-Pattern setzt deshalb `G4` nach jeder X-Fahrt. Offen: in der Entwicklungsgenese Kapitel 7
+   (G-Code-Ablauf) und im Firmware-PDF ergänzen; prüfen, ob der L00m-Patch das Plugin auf Synchronisation umstellen
+   soll (dann wäre der Ablauf ohne zusätzliches `G4` sicher).
 
 ## Bekannte Probleme
 
