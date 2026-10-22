@@ -14,7 +14,7 @@ Firmware liegen in eigenen Repos:
 |---|---|---|
 | [L00m-grblHAL](https://github.com/DeRGiPsKoPf/L00m-grblHAL) | grblHAL-Firmware für den FYSETC R4 (Patch, `.uf2`, Anleitung Flashen & Verkabeln) | Achsen, Verfahrwege, Spindelsteigung, Motoren |
 | [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) | Muster-App: Bild, Zeichnung, Code → G-Code; Maschinenprofile | Fadenabstand, Verfahrwege, Z-Höhen, Ablauf pro Schuss |
-| [L00m-Host](https://github.com/DeRGiPsKoPf/L00m-Host) | ESP32-S3 am Loom: WLAN, Auftrag, Anzeige, Taster, mehrere Looms im Takt (geplant) | Einbauort, Versorgung, Stecker zwischen gestapelten Looms |
+| [L00m-Host](https://github.com/DeRGiPsKoPf/L00m-Host) | ESP32-S3 am Loom: WLAN, Auftrag, Anzeige, Taster, mehrere Looms im Takt (geplant) | Einbauort, Versorgung, Platz für die Antenne (Funk zwischen gestapelten Looms) |
 
 ## Tech-Stack
 
@@ -38,7 +38,7 @@ LICENSES/                                      Lizenzvolltexte (siehe LICENSE.md
 
 Zusammenspiel: Muster (Bild, Zeichnung, PDF, WIF, Code) → L00m-Pattern mit Maschinenprofil → `.gcode` → per USB
 (Web Serial oder G-Code-Sender) → grblHAL auf dem R4 (L00m-grblHAL). Geplant: L00m-Pattern → WLAN → L00m-Host
-(ESP32-S3) → UART → R4; mehrere Looms per RS-485, ein Host gibt den Takt.
+(ESP32-S3) → UART → R4; mehrere Looms per Funk gekoppelt (Koppeln-Knopf, keine Kabel), ein Host gibt den Takt.
 Pro Schuss: Z auf Wählhöhe, X fährt Faden für Faden an (`G4` nach jeder X-Fahrt), Servo wählt (`M280 P0 S90`,
 `G4 P0.2`, `M280 P0 S0`, `G4 P0.2`), X zurück auf X0, dann hebt Z alle gewählten Fäden (`G1 Z88`), `M0` pausiert zum
 Schusseintrag, nach Zyklusstart schließt Z0 das Fach. Ablauf: Entwicklungsgenese Kapitel 7; die G-Code-Vorlage

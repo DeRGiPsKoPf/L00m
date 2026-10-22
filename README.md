@@ -29,7 +29,7 @@ Ziel ist eine langlebige, wartungsarme und sichere Maschine (5–10 Jahre Einsat
                         │
 L00m-Pattern ──G-Code───┼──► heute:   USB (Web Serial) ─────────────────────────► R4 mit L00m-grblHAL
 (Muster-App)            └──► geplant: WLAN ──► L00m-Host (ESP32-S3) ──UART──► R4 mit L00m-grblHAL
-                                                   └── RS-485 ──► weitere Looms (je S3 + R4)
+                                                   └╌╌ Funk ╌╌► weitere Looms (je S3 + R4)
 ```
 
 | Repo | Inhalt | Lizenz | Braucht | Wird gebraucht von |

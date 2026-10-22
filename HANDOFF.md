@@ -9,6 +9,9 @@ Prototyp mit X + Dual-Z + einem Servo mechanisch fertig aufbauen und die erste F
 
 ## Letzter Stand
 
+- 23.10.2026: **Gestapelte Looms per Funk statt Kabel** (Entscheidung, Details L00m-Host `KONZEPT.md`): Die S3
+  koppeln sich per ESP-NOW über einen Koppeln-Knopf; RS-485 und Micro-Fit-Buchsen entfallen. Für die Mechanik heißt
+  das: kein Kabelweg zwischen den Looms, aber ein Einbauort mit freier Sicht für die Antenne.
 - 23.10.2026: **Repos neu geordnet.** Die Firmware (`Firmware/`: Patch, `.uf2`, `machine_defaults.h`, Anleitung)
   liegt jetzt im eigenen Repo [L00m-grblHAL](https://github.com/DeRGiPsKoPf/L00m-grblHAL) (GPL), mit den
   Firmware-Punkten und der Servo-Pin-Tabelle aus diesem HANDOFF. Neu ist außerdem
@@ -18,8 +21,8 @@ Prototyp mit X + Dual-Z + einem Servo mechanisch fertig aufbauen und die erste F
   README, AGENTS und LICENSE verweisen auf alle drei Repos (Tabelle „Zusammenspiel der Repos“); in AGENTS `G1 Z90` →
   `Z88` und der Ablauf pro Schuss auf den Stand der Vorlage gebracht.
 - 22.10.2026: Entscheidungen (Details L00m-Host `KONZEPT.md` Abschnitt 2): Weg A → C, FluidNC-Board (D) gestrichen;
-  jeder Loom bekommt einen S3 am UART0 des R4 (GPIO0/1), zwei Steckplätze für weitere Looms per RS-485; der Host gibt
-  den Takt, jeder S3 webt seinen Loom selbst; Taster, OLED und Neopixel am S3.
+  jeder Loom bekommt einen S3 am UART0 des R4 (GPIO0/1); der Host gibt den Takt, jeder S3 webt seinen Loom selbst;
+  Taster, OLED und Neopixel am S3. (Die Verbindung zwischen den Looms war zuerst RS-485, seit 23.10. Funk.)
 - 21.10.2026: Erster Servo-Test mit L00m-Pattern am Gerät: `M280` läuft der X-Fahrt voraus (jetzt offener Punkt in
   L00m-grblHAL).
 - 19.10.2026: Muster-Generator in das eigene Repo L00m-Pattern ausgelagert (TypeScript-Offline-Web-App statt
@@ -36,8 +39,9 @@ Prototyp mit X + Dual-Z + einem Servo mechanisch fertig aufbauen und die erste F
 1. Mechanik-Aufbauanleitung schreiben (in der Firmware-Anleitung angekündigt, die jetzt in L00m-grblHAL liegt).
 2. Sicherheitskonzept umsetzen: Not-Aus-Pilztaster in der 24-V-Leitung.
 3. Servo-Versorgung für mehr als 1–2 Servos: separater 5-V-Wandler (MP1584EN / XL4016).
-4. Einbau des ESP32-S3 (L00m-Host) am Loom planen: Gehäuse, Antenne nicht hinter Metall oder neben den Motoren,
-   Micro-Fit-3.0-Buchsen für die Verbindung zu gestapelten Looms (Details L00m-Host `KONZEPT.md` Abschnitt 4).
+4. Einbau des ESP32-S3 (L00m-Host) am Loom planen: Gehäuse, Weiter- und Koppeln-Taster erreichbar, OLED sichtbar;
+   die Antenne trägt auch die Verbindung zu gestapelten Looms, also nicht hinter Metall oder neben den Motoren
+   (Details L00m-Host `KONZEPT.md` Abschnitt 4).
 5. Für die PDFs vormerken: Entwicklungsgenese Kapitel 8 beschreibt noch einen Python-Generator; Kapitel 7 um die
    `M0`-Pause, `G4` nach X-Fahrt und Schwenk und den Hub auf Z88 statt `G1 Z90` ergänzen; Repos L00m-grblHAL,
    L00m-Pattern und L00m-Host erwähnen.
@@ -56,5 +60,5 @@ Prototyp mit X + Dual-Z + einem Servo mechanisch fertig aufbauen und die erste F
 | Fadenauswahl ab ~64 Fäden | Servos · Latching-Solenoide · Wähler-Haken nach CMU-Vorbild | offen, Prototyp mit Servo |
 | Repo öffentlich machen | ja · privat lassen | privat |
 | ~~Firmware in eigenes Repo~~ | – | entschieden 23.10.2026: L00m-grblHAL |
-| ~~Mehrere Looms stapeln~~ | – | entschieden 22.10.2026: je ein Controller + S3 pro Loom, Takt vom Host (L00m-Host) |
+| ~~Mehrere Looms stapeln~~ | – | entschieden 22.10.2026: je ein Controller + S3 pro Loom, Takt vom Host (L00m-Host); seit 23.10. per Funk gekoppelt |
 | ~~Firmware-Zukunft~~ | – | entschieden 22.10.2026: Weg A → C (S3 als Host vor grblHAL), D gestrichen, Klipper verworfen |
