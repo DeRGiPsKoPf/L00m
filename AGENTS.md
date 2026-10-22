@@ -7,22 +7,24 @@ Arbeitsstand steht in `HANDOFF.md`, nicht hier.
 
 L00m ist ein computergesteuerter Jacquard-Webstuhl im Eigenbau für den Schul- und Kunstbetrieb (5–10 Jahre
 Einsatz). Ein Servo auf einem X-Schlitten wählt Kettfäden einzeln aus, ein Dual-Z-Hub hebt alle gewählten Fäden
-gemeinsam. Gesteuert wird per G-Code über grblHAL; der geplante Muster-Generator
-[L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) (eigenes Repo, Offline-Web-App) übersetzt Bilder,
-Zeichnungen, PDFs, Webpatronen und Code in G-Code.
+gemeinsam. Dieses Repo enthält die Maschine selbst: Konzept, Entwicklungsgenese, CAD und Renderings. Software und
+Firmware liegen in eigenen Repos:
+
+| Repo | Inhalt | Braucht von L00m |
+|---|---|---|
+| [L00m-grblHAL](https://github.com/DeRGiPsKoPf/L00m-grblHAL) | grblHAL-Firmware für den FYSETC R4 (Patch, `.uf2`, Anleitung Flashen & Verkabeln) | Achsen, Verfahrwege, Spindelsteigung, Motoren |
+| [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) | Muster-App: Bild, Zeichnung, Code → G-Code; Maschinenprofile | Fadenabstand, Verfahrwege, Z-Höhen, Ablauf pro Schuss |
+| [L00m-Host](https://github.com/DeRGiPsKoPf/L00m-Host) | ESP32-S3 am Loom: WLAN, Auftrag, Anzeige, Taster, mehrere Looms im Takt (geplant) | Einbauort, Versorgung, Stecker zwischen gestapelten Looms |
 
 ## Tech-Stack
 
-- **Controller:** FYSETC R4 V1.0 (RP2040, 4× TMC2209 fest verlötet, UART-Modus, 0,22-Ω-Messwiderstände)
-- **Firmware:** grblHAL, Treiber [grblHAL/RP2040](https://github.com/grblHAL/RP2040) Commit `2f5bc4a` + eigener Patch.
-  Gebaut mit Pico SDK 2.1.1, arm-none-eabi-gcc 13.2, CMake + Ninja (Linux/WSL)
 - **Mechanik:** 2020-Aluprofil (Nut 6, Blind Joints), MGN9H-Linearführungen, Dual-Z-Trapezgewindespindeln TR8x8
   (8 mm Steigung, `$102=400`) mit 2× NEMA 17 (17HE15-1504S oder 17HS4401), X über GT2-Riemen (20 Zähne)
-- **Aktor für die Fadenauswahl:** RC-Servo (getestet MG90, geplant bis 6× SG90) per `M280 P0 S<Winkel>`
+- **Aktor für die Fadenauswahl:** RC-Servo (getestet MG90, geplant bis 6× SG90)
+- **Elektronik:** FYSETC R4 V1.0 (RP2040, 4× TMC2209 fest verlötet) mit grblHAL aus L00m-grblHAL; geplant pro Loom
+  ein ESP32-S3 SuperMini (L00m-Host) am UART0 des R4
 - **CAD:** Shapr3D (`.shapr`), Export als STEP
-- **G-Code-Sender:** ioSender (Windows), alternativ gSender, CNCjs, UGS
-- **Muster-Generator (geplant):** eigenes Repo [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern),
-  TypeScript, Offline-Web-App als eine einzige HTML-Datei, Senden per Web Serial
+- **G-Code:** aus L00m-Pattern; senden per USB (Web Serial, ioSender) oder künftig über L00m-Host
 
 ## Architektur
 
@@ -31,35 +33,28 @@ Zeichnungen, PDFs, Webpatronen und Code in G-Code.
 02 L00m Entwicklungsgenese.pdf                 Designentscheidungen Mechanik, Antrieb, Strom, Sicherheit
 Bilder/                                        Renderings (im README eingebunden)
 CAD/                                           Shapr3D-Projekt, STEP-Export (gezippt)
-Firmware/                                      Anleitung (PDF), fertige .uf2, Patch, machine_defaults.h
 LICENSES/                                      Lizenzvolltexte (siehe LICENSE.md)
 ```
 
-Zusammenspiel: Muster (Bild, Zeichnung, PDF, WIF, Code) → L00m-Pattern mit Maschinenprofil → `.gcode` →
-G-Code-Sender oder direkt per Web Serial (USB) → grblHAL auf dem R4.
-Pro Schuss: Z auf Wählhöhe, X fährt Faden für Faden an, Servo wählt (`M280 P0 S90`, `G4 P0.2`, `M280 P0 S0`),
-dann hebt Z alle gewählten Fäden (`G1 Z90`), `M0` pausiert zum Schusseintrag, nach Zyklusstart schließt Z0 das Fach.
-Ablauf: Entwicklungsgenese Kapitel 7; Profile und G-Code-Vorlagen liegen in L00m-Pattern und nennen den
-Firmware-Stand, für den sie getestet sind. Firmware-Änderungen hier deshalb dort mitprüfen.
-
-**Pinbelegung (grblHAL):** X = MOTOR-X, Z1 = MOTOR-Z, Z2 = MOTOR-E (ganged + auto-squared), Y-Treiber frei.
-Endstops X-STOP, Z-STOP, E-STOP (= Z2). Servo am Laser-Stecker (GPIO22). Vollständig: Firmware-PDF Kapitel 10.
+Zusammenspiel: Muster (Bild, Zeichnung, PDF, WIF, Code) → L00m-Pattern mit Maschinenprofil → `.gcode` → per USB
+(Web Serial oder G-Code-Sender) → grblHAL auf dem R4 (L00m-grblHAL). Geplant: L00m-Pattern → WLAN → L00m-Host
+(ESP32-S3) → UART → R4; mehrere Looms per RS-485, ein Host gibt den Takt.
+Pro Schuss: Z auf Wählhöhe, X fährt Faden für Faden an (`G4` nach jeder X-Fahrt), Servo wählt (`M280 P0 S90`,
+`G4 P0.2`, `M280 P0 S0`, `G4 P0.2`), X zurück auf X0, dann hebt Z alle gewählten Fäden (`G1 Z88`), `M0` pausiert zum
+Schusseintrag, nach Zyklusstart schließt Z0 das Fach. Ablauf: Entwicklungsgenese Kapitel 7; die G-Code-Vorlage
+liegt in L00m-Pattern. Änderungen an Mechanik (Wege, Steigung, Fadenabstand) dort und in L00m-grblHAL mitprüfen.
 
 **Achsen nach Homing:** Nullpunkt am Home-Schalter, Bereich X 0–98 mm, Z 0–88 mm (Verfahrweg − 2 mm Pull-off).
+Pinbelegung des R4: L00m-grblHAL, Anleitung Kapitel 10.
 
 ## Konventionen
 
-- **Sprache:** Dokumentation und Commit-Nachrichten auf Deutsch. Code-Kommentare in der Firmware auf Englisch
-  (wie grblHAL upstream).
+- **Sprache:** Dokumentation und Commit-Nachrichten auf Deutsch.
 - **Dateinamen:** Dokumente mit laufender Nummer (`01 …`, `02 …`); Shapr3D-Stände mit Datum `JJJJMMTT`; der
   STEP-Export trägt die Projektversion im Namen (`L03m` = Version 3, so gewollt).
-- **Firmware-Änderungen** nur über den Patch: grblHAL/RP2040 auf `2f5bc4a` auschecken, Patch anwenden, ändern, neuen
-  Patch mit `git diff` erzeugen. `machine_defaults.h` liegt zusätzlich einzeln in `Firmware/` und muss mit der
-  Fassung im Patch übereinstimmen.
-- **Getestete Werte** stehen in `machine_defaults.h` und in der Firmware-Anleitung Kapitel 7 („Endkonfiguration“).
-  Beide gemeinsam ändern.
-- **Commits:** kurze Betreffzeile auf Deutsch im Imperativ, z. B. „Servo-Pulsbreiten an MG90 angepasst“.
-- **Tests:** keine automatisierten Tests; Hardware-Abnahme nach der Checkliste „Geschafft, wenn“ im Firmware-PDF.
+- **Commits:** kurze Betreffzeile auf Deutsch im Imperativ, z. B. „Hubrahmen verstärkt“.
+- **Tests:** keine automatisierten Tests; Abnahme am Gerät (Firmware: Checkliste in der Anleitung von L00m-grblHAL,
+  Weben: `PROBELAUF.md` in L00m-Pattern).
 
 ## Wichtige Befehle
 
@@ -70,17 +65,7 @@ STEP-Export aus Shapr3D zippen (die entpackte `.step` ist per `.gitignore` ausge
 Compress-Archive -Path CAD\L03m.step -DestinationPath CAD\L03m.step.zip -CompressionLevel Optimal -Force
 ```
 
-Firmware bauen (Linux/WSL, Werkzeuge siehe Firmware-PDF Kapitel 11):
-
-```bash
-git clone https://github.com/grblHAL/RP2040.git && cd RP2040
-git checkout 2f5bc4a && git submodule update --init --recursive
-git apply ../grblHAL-RP2040-fysetc-r4.patch
-mkdir build && cd build && cmake -G Ninja -DPICO_BOARD=pico .. && ninja   # → build/grblHAL.uf2
-```
-
-Am Gerät: `$I` (Board/Optionen), `$+` (alle Einstellungen; `$$` geht in diesem Build nicht), `$RST=*`
-(Standardwerte laden), `$LIM` (Endstops), `$H` / `$HZ` / `$HX` (Homing), `M280 P0 S90` (Servo).
+Firmware bauen und flashen: siehe L00m-grblHAL.
 
 ## Bekannte Fallstricke und Entscheidungen
 
@@ -90,37 +75,29 @@ Am Gerät: `$I` (Board/Optionen), `$+` (alle Einstellungen; `$$` geht in diesem 
   dauerhaft dehnen; Getriebestepper zu teuer. Spindeln nur trocken schmieren (PTFE-Spray oder Graphit), kein Fett –
   Fett + Faserflug verklebt.
 - **grblHAL statt Klipper:** keine Makrosprache, daher erzeugt der Muster-Generator alle Servo-Befehle direkt als
-  G-Code.
+  G-Code. Details in L00m-grblHAL.
 - **Muster-Generator als eigenes Repo in TypeScript** (Entscheidung 19.10.2026): statt Python + Pillow in diesem
   Repo. Als Offline-Web-App in einer HTML-Datei läuft er ohne Installation auf jedem Gerät; ein eigenes Repo hält die
   CAD-Historie fern und erlaubt eigene Releases. Begründung: `KONZEPT.md` und `AGENTS.md` in L00m-Pattern.
-- **Motorstrom:** maximal 958 mA (0,22-Ω-Messwiderstände); grblHAL rechnet sonst mit 0,11 Ω, daher
-  `TRINAMIC_R_SENSE 220` im Patch. Z2 übernimmt Strom und Mikroschritte von Z. Der passende Wert hängt von
-  Fadenzahl und Fadenspannung ab und wird an jedem Aufbau selbst ausgetestet; eingebaut sind 500 mA.
+- **Steuerzentrale ESP32-S3 statt FluidNC-Board** (Entscheidung 21./22.10.2026): Ein S3 pro Loom am UART0 des R4.
+  Taster, OLED und Neopixel sitzen am S3, nicht am R4. FluidNC-Boards gestrichen, Klipper verworfen (SD-Karte mit
+  Betriebssystem). Begründung und Recherche: `KONZEPT.md` in L00m-Host.
+- **Firmware in eigenem Repo** (Entscheidung 23.10.2026): L00m-grblHAL mit eigenen Versionen pro `.uf2` und eigener
+  Lizenz (GPL); dieses Repo bleibt Mechanik und Dokumentation. Historie der Firmware-Dateien hier bis Commit
+  `91e346d`.
 - **Sicherheit:** 12 V statt 24 V senkt die Kraft nicht (TMC2209 regelt Strom). StallGuard schützt keine Hände.
   Geplant: Strom so tief, dass 110 N gerade gehoben werden, plus Pilz-Not-Aus, der die 24 V hart trennt.
 - **Servo-Strom:** Mehrere Servos am 5-V-Wandler des R4 können einen Brownout auslösen. Für mehr als 1–2 Servos
   eigener Wandler (geplant XL4016) direkt am 24-V-Netzteil, zum R4 nur Signal + eine Masseleitung.
-- **Servo-Fix im Patch:** grblHAL ab Commit `947338d` reserviert den PWM-Kanal beim Start (`M280` → `error:39`), und
-  50 Hz passen bei 200 MHz nicht in den 16-Bit-Zähler. Beides behebt der Patch in `ioports_analog.c`.
 - **STEP wird gezippt versioniert** statt Git LFS (Entscheidung 19.10.2026): kein LFS auf den Rechnern nötig; jede
   neue Version vergrößert aber die Historie um ~45 MB.
-- **Hard-Limits aus (`$21=0`):** der unbelegte Y-Eingang meldet „ausgelöst“ und würde sofort Alarm geben.
-- **Ersatzwerte in `grbl/settings.c`** (Homing-Geschwindigkeit pro Achse) stehen im Patch außerhalb jedes `#if`.
-  Innerhalb von `#if ENABLE_SPINDLE_LINEARIZATION` (so bis 19.10.2026) brach der Build ohne `machine_defaults.h` ab.
-- **Firmware unter Windows bauen** geht (getestet 19.10.2026): Arm GNU Toolchain 13.2.rel1 (mingw), CMake, Ninja und
-  vorgebautes `pioasm`/`picotool` aus [raspberrypi/pico-sdk-tools](https://github.com/raspberrypi/pico-sdk-tools)
-  2.1.1 (`-Dpioasm_DIR`, `-Dpicotool_DIR`). Kurzen Build-Pfad nehmen (gcc scheitert an Windows' 260-Zeichen-Grenze),
-  Submodule mit `git -c core.longpaths=true` holen; vom Pico SDK reicht `lib/tinyusb`. Ergebnis funktionsgleich,
-  aber nicht bytegleich zum Ubuntu-Build (andere C-Bibliothek im Compiler-Paket).
-- **PDFs und Claude-Docs:** Firmware-Anleitung und Konzept gibt es auch als Claude-Docs, deren PDF-Export aber anders
-  aussieht (andere Seitenaufteilung). Kleine Korrekturen am 19.10.2026 wurden deshalb direkt in die PDFs geschrieben
-  (PyMuPDF, gleiche Schriften und Positionen); die Entwicklungsgenese hat keine Doc-Quelle.
+- **PDFs und Claude-Docs:** Das Konzept gibt es auch als Claude-Doc, dessen PDF-Export aber anders aussieht (andere
+  Seitenaufteilung). Kleine Korrekturen am 19.10.2026 wurden deshalb direkt in die PDFs geschrieben (PyMuPDF, gleiche
+  Schriften und Positionen); die Entwicklungsgenese hat keine Doc-Quelle.
 
 ## Nicht anfassen / Vorsicht bei
 
-- **Commit `2f5bc4a` von grblHAL/RP2040** nicht ohne Not wechseln – der Patch passt nicht automatisch auf neuere
-  Stände.
+- **Lizenz bleibt Open Source** (CERN-OHL-S-2.0 für CAD, CC BY-SA 4.0 für Dokumentation); nicht ändern
+  (Entscheidung Nutzer 23.10.2026).
 - **DIAG-Jumper am R4** müssen gezogen bleiben, sonst melden die Treiber falsche Endstops.
-- **FAN2 nicht belegen:** GPIO22 ist auch das Servo-Signal.
 - **Motoren nie unter Spannung an- oder abstecken** (zerstört die fest verlöteten Treiber).

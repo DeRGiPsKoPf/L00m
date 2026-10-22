@@ -16,10 +16,28 @@ Ziel ist eine langlebige, wartungsarme und sichere Maschine (5–10 Jahre Einsat
 |---|---|
 | Konzept & Recherche | fertig, siehe `01 Konzept & Quellen` und `02 L00m Entwicklungsgenese` |
 | CAD (Shapr3D) | in Arbeit, Stand 19.10.2026 |
-| Elektronik & Firmware | aufgebaut und getestet: grblHAL auf FYSETC R4, X + Dual-Z (TR8x8) mit Squaring, Servo per `M280` |
+| Elektronik & Firmware | aufgebaut und getestet: grblHAL auf FYSETC R4, X + Dual-Z (TR8x8) mit Squaring, Servo per `M280` – Repo [L00m-grblHAL](https://github.com/DeRGiPsKoPf/L00m-grblHAL) |
+| Muster-Generator (Bild → G-Code) | Repo [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern): Bild, Textraster, Formel → G-Code, direkt senden per USB; Probelauf am Gerät läuft |
+| Steuerzentrale pro Loom (WLAN, Anzeige, Taster, mehrere Looms) | geplant im Repo [L00m-Host](https://github.com/DeRGiPsKoPf/L00m-Host) (ESP32-S3) |
 | Mechanik-Aufbauanleitung | fehlt noch |
-| Muster-Generator (Bild → G-Code) | geplant, noch nicht begonnen |
 | Sicherheitskonzept (Strombegrenzung, Not-Aus) | geplant, noch nicht umgesetzt |
+
+## Zusammenspiel der Repos
+
+```
+                L00m (Mechanik, CAD, Konzept) – beschreibt die Maschine
+                        │
+L00m-Pattern ──G-Code───┼──► heute:   USB (Web Serial) ─────────────────────────► R4 mit L00m-grblHAL
+(Muster-App)            └──► geplant: WLAN ──► L00m-Host (ESP32-S3) ──UART──► R4 mit L00m-grblHAL
+                                                   └── RS-485 ──► weitere Looms (je S3 + R4)
+```
+
+| Repo | Inhalt | Lizenz | Braucht | Wird gebraucht von |
+|---|---|---|---|---|
+| **L00m** (dieses) | Mechanik (CAD), Konzept, Entwicklungsgenese, Renderings | offen: CERN-OHL-S-2.0, CC BY-SA 4.0 | – | allen: Maße, Verfahrwege, Ablauf pro Schuss |
+| [L00m-grblHAL](https://github.com/DeRGiPsKoPf/L00m-grblHAL) | grblHAL-Patch für den FYSETC R4, fertige `.uf2`, Anleitung | offen: GPL-3.0-or-later, Anleitung CC BY-SA 4.0 | grblHAL/RP2040 (Commit `2f5bc4a`) | L00m (die Maschine bewegt sich), L00m-Pattern (Profile und Vorlagen passen zum Firmware-Stand), L00m-Host (zweiter Kanal `MPG_ENABLE 2`, Chip-ID in `$I`) |
+| [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) | Muster-App → G-Code, Maschinenprofile, G-Code-Vorlagen | proprietär | L00m-grblHAL (`M280`, `G4`, `M0`, Soft-Limits) | L00m-Host (liefert `l00m.html` aus, übernimmt die Sende-Logik) |
+| [L00m-Host](https://github.com/DeRGiPsKoPf/L00m-Host) | Firmware für den ESP32-S3 am Loom (geplant) | proprietär | L00m-grblHAL (MPG-Kanal, Chip-ID), L00m-Pattern (`l00m.html`, WebSocket) | – |
 
 ## Aufbau des Repos
 
@@ -30,31 +48,19 @@ Bilder/                                        Renderings
 CAD/
   Project L00m - 20261019.shapr                Shapr3D-Projekt (Arbeitsdatei)
   L03m.step.zip                                STEP-Export der Baugruppe, Projektversion 3 (gezippt, entpackt 171 MB)
-Firmware/
-  grblHAL auf FYSETC-R4 - Flashen & Konfiguration.pdf   Anleitung: Flashen, Verkabeln, Einstellungen, Fehlersuche
-  grblHAL-FYSETC-R4.uf2                        fertige Firmware zum Draufkopieren
-  grblHAL-RP2040-fysetc-r4.patch               Änderungen gegenüber grblHAL (Board-Datei, Servo-Fix, Standardwerte)
-  machine_defaults.h                           Maschinenwerte, die $RST=* wiederherstellt
 LICENSES/                                      vollständige Lizenztexte
 ```
 
-## Schnellstart Elektronik
-
-1. Am FYSETC R4 BOOTSEL halten, RST drücken, BOOTSEL loslassen.
-2. `Firmware/grblHAL-FYSETC-R4.uf2` auf das Laufwerk `RPI-RP2` ziehen.
-3. Mit einem G-Code-Sender (z. B. [ioSender](https://github.com/terjeio/ioSender)) verbinden, `$RST=*` senden,
-   mit `$I` prüfen, ob `FYSETC R4 V1.0` gemeldet wird.
-
-Alles Weitere (Verkabelung, Homing, Servo, Firmware selbst bauen) steht in der Firmware-Anleitung im Ordner
-`Firmware`.
+Die Firmware (bis 23.10.2026 hier unter `Firmware/`) liegt jetzt in
+[L00m-grblHAL](https://github.com/DeRGiPsKoPf/L00m-grblHAL), mit Schnellstart zum Flashen und der Anleitung zum
+Verkabeln.
 
 ## Lizenz
 
-Mehrere Lizenzen, je nach Dateiart – Details in [LICENSE.md](LICENSE.md):
+Open Source, je nach Dateiart – Details in [LICENSE.md](LICENSE.md):
 
-- Firmware und Code: **GPL-3.0-or-later** (Pflicht, weil die Firmware auf grblHAL aufbaut)
 - CAD-Daten: **CERN-OHL-S-2.0**
-- Dokumentation (PDFs, Markdown): **CC BY-SA 4.0**
+- Dokumentation (PDFs, Markdown, Bilder): **CC BY-SA 4.0**
 
 ## Kontakt
 
