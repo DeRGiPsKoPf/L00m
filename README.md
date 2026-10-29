@@ -35,8 +35,8 @@ L00m-Pattern ──G-Code───┼──► heute:   USB (Web Serial) ──�
                                                    └╌╌ Funk ╌╌► weitere Looms (je S3 + R4)
 ```
 
-Öffentlich ist bisher nur dieses Repo. Die anderen drei sind **in Entwicklung** und noch nicht freigegeben; ihre
-Links führen erst nach der Veröffentlichung zum Ziel.
+Die anderen drei Repos sind **in Entwicklung** und bleiben bis zu einem veröffentlichbaren Alpha-Zustand noch
+privat; ihre Links führen erst danach zum Ziel.
 
 | Repo | Inhalt | Lizenz | Braucht | Wird gebraucht von |
 |---|---|---|---|---|

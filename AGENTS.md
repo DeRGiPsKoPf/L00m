@@ -8,7 +8,9 @@ Arbeitsstand steht in `HANDOFF.md`, nicht hier.
 L00m ist ein computergesteuerter Jacquard-Webstuhl im Eigenbau für den Schul- und Kunstbetrieb (5–10 Jahre
 Einsatz). Ein Servo auf einem X-Schlitten wählt Kettfäden einzeln aus, ein Dual-Z-Hub hebt alle gewählten Fäden
 gemeinsam. Dieses Repo enthält die Maschine selbst: Konzept, Entwicklungsgenese, CAD und Renderings. Software und
-Firmware liegen in eigenen Repos:
+Firmware liegen in eigenen Repos. Öffentlich ist bisher nur dieses Repo (seit 29.10.2026); die anderen sind in
+Entwicklung und bleiben bis zu einem veröffentlichbaren Alpha-Zustand privat. README und LICENSE nennen sie mit Link
+und dem Zusatz „in Entwicklung“ (Entscheidung Nutzer 29.10.2026):
 
 | Repo | Inhalt | Braucht von L00m |
 |---|---|---|
@@ -93,11 +95,16 @@ Firmware bauen und flashen: siehe L00m-grblHAL.
   neue Version vergrößert aber die Historie um ~45 MB.
 - **PDFs und Claude-Docs:** Das Konzept gibt es auch als Claude-Doc, dessen PDF-Export aber anders aussieht (andere
   Seitenaufteilung). Kleine Korrekturen am 19.10.2026 wurden deshalb direkt in die PDFs geschrieben (PyMuPDF, gleiche
-  Schriften und Positionen); die Entwicklungsgenese hat keine Doc-Quelle.
+  Schriften und Positionen); die Entwicklungsgenese hat keine Doc-Quelle. Am 29.10.2026 ebenso: Statuszeilen,
+  Kapitel 1, Kapitel 8 (Absatz neu in Arial) und der Codeblock in Kapitel 7, der dafür komplett in Consolas neu
+  gesetzt ist (die Original-Codeschrift ist eine Type3-Schrift und lässt sich nicht nachsetzen).
 
 ## Nicht anfassen / Vorsicht bei
 
 - **Lizenz bleibt Open Source** (CERN-OHL-S-2.0 für CAD, CC BY-SA 4.0 für Dokumentation); nicht ändern
-  (Entscheidung Nutzer 23.10.2026).
+  (Entscheidung Nutzer 23.10.2026). Fremde Norm- und Kaufteile im CAD (von GrabCAD, öffentlich lizenziert) sind
+  ausgenommen (LICENSE.md); neue Fremdteile dort in die Liste aufnehmen.
+- **Repo ist öffentlich:** keine privaten Daten, Zugangsdaten oder vollen Namen einchecken. Die PDFs nennen nur den
+  Vornamen. Die anderen L00m-Repos nicht ohne ausdrückliche Ansage öffentlich machen.
 - **DIAG-Jumper am R4** müssen gezogen bleiben, sonst melden die Treiber falsche Endstops.
 - **Motoren nie unter Spannung an- oder abstecken** (zerstört die fest verlöteten Treiber).

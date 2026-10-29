@@ -14,14 +14,15 @@ Namensnennung bei CC BY-SA und CERN-OHL-S: „L00m – DeRGiPsKoPf“ mit Link a
 
 ## Fremdteile im CAD
 
-Die CERN-OHL-S-2.0 gilt nur für die eigene Konstruktion. Im CAD-Modell eingebundene Norm- und Kaufteile von Dritten
-sind davon ausgenommen und unterliegen den Bedingungen ihrer jeweiligen Quellen bzw. Hersteller, insbesondere:
+Die CERN-OHL-S-2.0 gilt nur für die eigene Konstruktion. Die im CAD-Modell eingebundenen Norm- und Kaufteile stammen
+von [GrabCAD](https://grabcad.com) und sind öffentlich lizenziert; sie sind von der CERN-OHL-S-2.0 ausgenommen und
+unterliegen weiter den Bedingungen ihrer Quelle. Das betrifft:
 Schrittmotoren (17HS4401), Servo (MG90), Linearführungen (MGN9H), Endschalter (Micro Limit Switch), GT2-Riemenscheiben,
 Wellenkupplungen und Kugellager (MR128).
 
 ## Andere Repos
 
-Die übrigen Repos sind in Entwicklung und noch nicht öffentlich.
+Die übrigen Repos sind in Entwicklung und bleiben bis zu einem veröffentlichbaren Alpha-Zustand noch privat.
 
 | Repo | Lizenz |
 |---|---|

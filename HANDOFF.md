@@ -1,6 +1,6 @@
 # Handoff – aktueller Arbeitsstand
 
-**Aktualisiert:** 23. Oktober 2026 · Branch `main`
+**Aktualisiert:** 29. Oktober 2026 · Branch `main`
 
 ## Aktuelles Ziel
 
@@ -9,6 +9,18 @@ Prototyp mit X + Dual-Z + einem Servo mechanisch fertig aufbauen und die erste F
 
 ## Letzter Stand
 
+- 29.10.2026: **Repo öffentlich gemacht.** Vorher ganzes Repo
+  samt Historie geprüft: keine Zugangsdaten, keine E-Mail-Adressen, kein voller Name. L00m-grblHAL, L00m-Pattern
+  und L00m-Host sind in Entwicklung und bleiben bis zu einem veröffentlichbaren Alpha-Zustand privat; README und
+  LICENSE nennen sie mit Link und dem Zusatz „in Entwicklung“.
+  README hat einen Sicherheitshinweis (Prototyp, kein geprüftes Gerät). LICENSE.md nimmt jetzt fremde Norm- und
+  Kaufteile im CAD (Motoren, Servo, MGN9H, Endschalter, Pulleys, Kupplungen, Lager; alle von GrabCAD, öffentlich
+  lizenziert) von der CERN-OHL-S aus.
+- 29.10.2026: **PDFs korrigiert** (PyMuPDF): Datum in beiden Statuszeilen deutsch (19.10.2026); Entwicklungsgenese
+  mit Status „Elektronik & Firmware aufgebaut und getestet“, „auf einem … Kinematik-System“ (Kap. 1), Codeblock in
+  Kap. 7 komplett in Consolas neu gesetzt („Ausgangsposition“, `G1 Z88`, `M0`-Pause statt „<warten auf weiteren
+  Input>“), Kap. 8 neu: beschreibt jetzt L00m-Pattern (TypeScript-Offline-Web-App) statt des Python-Skripts.
+  Die Tabelle in Kap. 5 war korrekt (RP2040 an der 5-V-Schiene), dort nichts geändert.
 - 23.10.2026: **Gestapelte Looms per Funk statt Kabel** (Entscheidung, Details L00m-Host `KONZEPT.md`): Die S3
   koppeln sich per ESP-NOW über einen Koppeln-Knopf; RS-485 und Micro-Fit-Buchsen entfallen. Für die Mechanik heißt
   das: kein Kabelweg zwischen den Looms, aber ein Einbauort mit freier Sicht für die Antenne.
@@ -42,23 +54,21 @@ Prototyp mit X + Dual-Z + einem Servo mechanisch fertig aufbauen und die erste F
 4. Einbau des ESP32-S3 (L00m-Host) am Loom planen: Gehäuse, Weiter- und Koppeln-Taster erreichbar, OLED sichtbar;
    die Antenne trägt auch die Verbindung zu gestapelten Looms, also nicht hinter Metall oder neben den Motoren
    (Details L00m-Host `KONZEPT.md` Abschnitt 4).
-5. Für die PDFs vormerken: Entwicklungsgenese Kapitel 8 beschreibt noch einen Python-Generator; Kapitel 7 um die
-   `M0`-Pause, `G4` nach X-Fahrt und Schwenk und den Hub auf Z88 statt `G1 Z90` ergänzen; Repos L00m-grblHAL,
-   L00m-Pattern und L00m-Host erwähnen.
+5. Für die PDFs vormerken: Entwicklungsgenese Kapitel 7 fehlt noch `G4` nach X-Fahrt und Schwenk; die Repos
+   L00m-grblHAL und L00m-Host werden im PDF noch nicht erwähnt (L00m-Pattern seit 29.10. in Kapitel 8).
+6. L00m-grblHAL, L00m-Pattern und L00m-Host im Alpha-Zustand veröffentlichen; dann „in Entwicklung“ in README und
+   LICENSE entfernen.
 
 ## Bekannte Probleme
 
 - **Verfahrweg X 100 mm** vs. Konzept bis 240 Kettfäden – vermutlich nur Prototyp-Breite, nicht geklärt.
-- Tippfehler „Ausgansposition“ im G-Code-Beispiel der Entwicklungsgenese (Kapitel 7), noch nicht korrigiert (die
-  Code-Schrift dort lässt sich nicht passgenau nachsetzen).
-- Entwicklungsgenese Kapitel 7 nennt noch `G1 Z90`; die Soft-Limits erlauben nur Z 0–88 (siehe Baustelle 5).
 
 ## Entscheidungen in der Schwebe
 
 | Frage | Optionen | Stand |
 |---|---|---|
 | Fadenauswahl ab ~64 Fäden | Servos · Latching-Solenoide · Wähler-Haken nach CMU-Vorbild | offen, Prototyp mit Servo |
-| Repo öffentlich machen | ja · privat lassen | privat |
+| ~~Repo öffentlich machen~~ | – | entschieden 29.10.2026: L00m öffentlich, die anderen drei bis zum Alpha-Zustand privat |
 | ~~Firmware in eigenes Repo~~ | – | entschieden 23.10.2026: L00m-grblHAL |
 | ~~Mehrere Looms stapeln~~ | – | entschieden 22.10.2026: je ein Controller + S3 pro Loom, Takt vom Host (L00m-Host); seit 23.10. per Funk gekoppelt |
 | ~~Firmware-Zukunft~~ | – | entschieden 22.10.2026: Weg A → C (S3 als Host vor grblHAL), D gestrichen, Klipper verworfen |
