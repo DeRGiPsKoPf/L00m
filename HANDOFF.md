@@ -58,6 +58,12 @@ Prototyp mit X + Dual-Z + einem Servo mechanisch fertig aufbauen und die erste F
    L00m-grblHAL und L00m-Host werden im PDF noch nicht erwähnt (L00m-Pattern seit 29.10. in Kapitel 8).
 6. L00m-grblHAL, L00m-Pattern und L00m-Host im Alpha-Zustand veröffentlichen; dann „in Entwicklung“ in README und
    LICENSE entfernen.
+7. **Hubmagnet statt Servo** (Nutzer, 29.10.2026): 24 V, 0,3 A, 5 N auf 10 mm, schneller und einfacher als der Servo.
+   Anschluss am Heizausgang bzw. (zweiter) am Heizbett-Ausgang des Controllers (R4, SKR Pico), bis 2 Stück, später
+   evtl. mehr. Freilaufdiode antiparallel direkt am Magneten (Kathode an +24 V), Schottky z. B. SS34 oder 1N5819
+   (mindestens 1 A, 40 V). Prüfen: Einschaltdauer (ED) des Magneten, falls er während der `M0`-Pause an bleibt
+   (Erwärmung); Abfallzeit mit Diode (die Diode verlangsamt das Loslassen etwas). Punkt 3 (Servo-Versorgung) entfällt
+   damit voraussichtlich. Firmware: L00m-grblHAL HANDOFF Punkt 6; Vorlage: L00m-Pattern.
 
 ## Bekannte Probleme
 
