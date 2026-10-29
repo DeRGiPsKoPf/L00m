@@ -12,13 +12,22 @@ derselben Lizenz weitergeben.
 
 Namensnennung bei CC BY-SA und CERN-OHL-S: „L00m – DeRGiPsKoPf“ mit Link auf dieses Repo.
 
+## Fremdteile im CAD
+
+Die CERN-OHL-S-2.0 gilt nur für die eigene Konstruktion. Im CAD-Modell eingebundene Norm- und Kaufteile von Dritten
+sind davon ausgenommen und unterliegen den Bedingungen ihrer jeweiligen Quellen bzw. Hersteller, insbesondere:
+Schrittmotoren (17HS4401), Servo (MG90), Linearführungen (MGN9H), Endschalter (Micro Limit Switch), GT2-Riemenscheiben,
+Wellenkupplungen und Kugellager (MR128).
+
 ## Andere Repos
+
+Die übrigen Repos sind in Entwicklung und noch nicht öffentlich.
 
 | Repo | Lizenz |
 |---|---|
-| [L00m-grblHAL](https://github.com/DeRGiPsKoPf/L00m-grblHAL) (Firmware, bis 23.10.2026 hier unter `Firmware/`) | GPL-3.0-or-later (wegen grblHAL), Anleitung CC BY-SA 4.0 – ebenfalls Open Source |
-| [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) (Muster-App) | proprietär |
-| [L00m-Host](https://github.com/DeRGiPsKoPf/L00m-Host) (ESP32-S3 am Loom) | proprietär |
+| [L00m-grblHAL](https://github.com/DeRGiPsKoPf/L00m-grblHAL) (Firmware, bis 23.10.2026 hier unter `Firmware/`; in Entwicklung) | GPL-3.0-or-later (wegen grblHAL), Anleitung CC BY-SA 4.0 – ebenfalls Open Source |
+| [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) (Muster-App; in Entwicklung) | proprietär |
+| [L00m-Host](https://github.com/DeRGiPsKoPf/L00m-Host) (ESP32-S3 am Loom; in Entwicklung) | proprietär |
 
 ## Marken
 
