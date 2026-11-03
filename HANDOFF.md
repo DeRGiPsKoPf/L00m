@@ -1,6 +1,6 @@
 # Handoff – aktueller Arbeitsstand
 
-**Aktualisiert:** 29. Oktober 2026 · Branch `main`
+**Aktualisiert:** 2. November 2026 (Punkt 4: SuperMini gesockelt, USB der Controller mit Sperrdiode) · Branch `main`
 
 ## Aktuelles Ziel
 
@@ -53,7 +53,11 @@ Prototyp mit X + Dual-Z + einem Servo mechanisch fertig aufbauen und die erste F
 3. Servo-Versorgung für mehr als 1–2 Servos: separater 5-V-Wandler (MP1584EN / XL4016).
 4. Einbau des ESP32-S3 (L00m-Host) am Loom planen: Gehäuse, Weiter- und Koppeln-Taster erreichbar, OLED sichtbar;
    die Antenne trägt auch die Verbindung zu gestapelten Looms, also nicht hinter Metall oder neben den Motoren
-   (Details L00m-Host `KONZEPT.md` Abschnitt 4).
+   (Details L00m-Host `KONZEPT.md` Abschnitt 4). **Gesockelt** (Nutzer, 2.11.2026): Der SuperMini (S3 oder C3) hat am
+   USB-C keine Sperrdiode zwischen VBUS und 5-V-Pin. Er steckt deshalb in Buchsenleisten und wird zum Flashen
+   herausgenommen; eingebaut bleibt sein USB-C unerreichbar (Gehäuse so planen). Beim Sockel auf eine eindeutige
+   Ausrichtung achten (verpolt eingesteckt läge 5 V an falschen Pins). Der USB von R4 und SKR Pico hat je eine
+   Sperrdiode (Nutzer, 2.11.2026) und bleibt als Notzugang (Laptop per Web Serial, ioSender) unbedenklich.
 5. Für die PDFs vormerken: Entwicklungsgenese Kapitel 7 fehlt noch `G4` nach X-Fahrt und Schwenk; die Repos
    L00m-grblHAL und L00m-Host werden im PDF noch nicht erwähnt (L00m-Pattern seit 29.10. in Kapitel 8).
 6. L00m-grblHAL, L00m-Pattern und L00m-Host im Alpha-Zustand veröffentlichen; dann „in Entwicklung“ in README und
