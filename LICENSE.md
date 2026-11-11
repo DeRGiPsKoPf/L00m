@@ -27,7 +27,7 @@ Die übrigen Repos sind in Entwicklung und bleiben bis zu einem veröffentlichba
 | Repo | Lizenz |
 |---|---|
 | [L00m-grblHAL](https://github.com/DeRGiPsKoPf/L00m-grblHAL) (Firmware, bis 23.10.2026 hier unter `Firmware/`; in Entwicklung) | GPL-3.0-or-later (wegen grblHAL), Anleitung CC BY-SA 4.0 – ebenfalls Open Source |
-| [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) (Muster-App; in Entwicklung) | proprietär |
+| [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) (Muster-App; in Entwicklung) | GPL-3.0-or-later, Dokumentation CC BY-SA 4.0 – Open Source (seit 11.11.2026 wieder) |
 | [L00m-Host](https://github.com/DeRGiPsKoPf/L00m-Host) (ESP32-S3 am Loom; in Entwicklung) | proprietär |
 
 ## Marken

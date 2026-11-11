@@ -42,7 +42,7 @@ privat; ihre Links führen erst danach zum Ziel.
 |---|---|---|---|---|
 | **L00m** (dieses) | Mechanik (CAD), Konzept, Entwicklungsgenese, Renderings | offen: CERN-OHL-S-2.0, CC BY-SA 4.0 | – | allen: Maße, Verfahrwege, Ablauf pro Schuss |
 | [L00m-grblHAL](https://github.com/DeRGiPsKoPf/L00m-grblHAL) (in Entwicklung) | grblHAL-Patch für den FYSETC R4, fertige `.uf2`, Anleitung | offen: GPL-3.0-or-later, Anleitung CC BY-SA 4.0 | grblHAL/RP2040 (Commit `2f5bc4a`) | L00m (die Maschine bewegt sich), L00m-Pattern (Profile und Vorlagen passen zum Firmware-Stand), L00m-Host (zweiter Kanal `MPG_ENABLE 2`, Chip-ID in `$I`) |
-| [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) (in Entwicklung) | Muster-App → G-Code, Maschinenprofile, G-Code-Vorlagen | proprietär | L00m-grblHAL (`M64`/`M65` für die Hubmagnete, `G4`, `M0`, Soft-Limits) | L00m-Host (liefert `L00m-Pattern.html` aus, übernimmt die Sende-Logik) |
+| [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) (in Entwicklung) | Muster-App → G-Code, Maschinenprofile, G-Code-Vorlagen | GPL-3.0-or-later, Doku CC BY-SA 4.0 | L00m-grblHAL (`M64`/`M65` für die Hubmagnete, `G4`, `M0`, Soft-Limits) | L00m-Host (liefert `L00m-Pattern.html` aus, übernimmt die Sende-Logik) |
 | [L00m-Host](https://github.com/DeRGiPsKoPf/L00m-Host) (in Entwicklung) | Firmware für den ESP32-S3/-C3 am Loom | proprietär | L00m-grblHAL (MPG-Kanal, Chip-ID), L00m-Pattern (`L00m-Pattern.html`, WebSocket) | – |
 
 ## Aufbau des Repos
