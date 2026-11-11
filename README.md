@@ -19,7 +19,7 @@ Ziel ist eine langlebige, wartungsarme und sichere Maschine (5–10 Jahre Einsat
 |---|---|
 | Konzept & Recherche | fertig, siehe `01 Konzept & Quellen` und `02 L00m Entwicklungsgenese` |
 | CAD (Shapr3D) | in Arbeit, Stand 19.10.2026 |
-| Elektronik & Firmware | aufgebaut und getestet: grblHAL auf FYSETC R4, X + Dual-Z (TR8x8) mit Squaring, Servo per `M280` – Repo [L00m-grblHAL](https://github.com/DeRGiPsKoPf/L00m-grblHAL) (in Entwicklung) |
+| Elektronik & Firmware | aufgebaut und getestet: grblHAL auf FYSETC R4, X + Dual-Z (TR8x8) mit Squaring; Fadenauswahl per Hubmagnet (`M64`/`M65`, ersetzt den Servo, am Gerät noch ungetestet) – Repo [L00m-grblHAL](https://github.com/DeRGiPsKoPf/L00m-grblHAL) (in Entwicklung) |
 | Muster-Generator (Bild → G-Code) | Repo [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) (in Entwicklung): Bild, Textraster, Formel → G-Code, direkt senden per USB; Probelauf am Gerät läuft |
 | Steuerzentrale pro Loom (WLAN, Anzeige, Taster, mehrere Looms) | geplant im Repo [L00m-Host](https://github.com/DeRGiPsKoPf/L00m-Host) (in Entwicklung, ESP32-S3) |
 | Mechanik-Aufbauanleitung | fehlt noch |
@@ -42,8 +42,8 @@ privat; ihre Links führen erst danach zum Ziel.
 |---|---|---|---|---|
 | **L00m** (dieses) | Mechanik (CAD), Konzept, Entwicklungsgenese, Renderings | offen: CERN-OHL-S-2.0, CC BY-SA 4.0 | – | allen: Maße, Verfahrwege, Ablauf pro Schuss |
 | [L00m-grblHAL](https://github.com/DeRGiPsKoPf/L00m-grblHAL) (in Entwicklung) | grblHAL-Patch für den FYSETC R4, fertige `.uf2`, Anleitung | offen: GPL-3.0-or-later, Anleitung CC BY-SA 4.0 | grblHAL/RP2040 (Commit `2f5bc4a`) | L00m (die Maschine bewegt sich), L00m-Pattern (Profile und Vorlagen passen zum Firmware-Stand), L00m-Host (zweiter Kanal `MPG_ENABLE 2`, Chip-ID in `$I`) |
-| [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) (in Entwicklung) | Muster-App → G-Code, Maschinenprofile, G-Code-Vorlagen | proprietär | L00m-grblHAL (`M280`, `G4`, `M0`, Soft-Limits) | L00m-Host (liefert `l00m.html` aus, übernimmt die Sende-Logik) |
-| [L00m-Host](https://github.com/DeRGiPsKoPf/L00m-Host) (in Entwicklung) | Firmware für den ESP32-S3 am Loom (geplant) | proprietär | L00m-grblHAL (MPG-Kanal, Chip-ID), L00m-Pattern (`l00m.html`, WebSocket) | – |
+| [L00m-Pattern](https://github.com/DeRGiPsKoPf/L00m-Pattern) (in Entwicklung) | Muster-App → G-Code, Maschinenprofile, G-Code-Vorlagen | proprietär | L00m-grblHAL (`M64`/`M65` für die Hubmagnete, `G4`, `M0`, Soft-Limits) | L00m-Host (liefert `L00m-Pattern.html` aus, übernimmt die Sende-Logik) |
+| [L00m-Host](https://github.com/DeRGiPsKoPf/L00m-Host) (in Entwicklung) | Firmware für den ESP32-S3/-C3 am Loom | proprietär | L00m-grblHAL (MPG-Kanal, Chip-ID), L00m-Pattern (`L00m-Pattern.html`, WebSocket) | – |
 
 ## Aufbau des Repos
 
